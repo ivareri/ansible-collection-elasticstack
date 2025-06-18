@@ -82,12 +82,19 @@
         - ansible_os_family == "RedHat"
         - elasticstack_full_stack | bool
 
-    - name: Update Elasticsearch - deb or unmanaged repositories rpm
+    - name: Update Elasticsearch - deb
+      ansible.builtin.apt:
+        name: "{{ elasticsearch_package }}"
+        allow_change_held_packages: true
+      when:
+        - ansible_os_family == "Debian"
+        - elasticstack_full_stack | bool
+
+    - name: Update Elasticsearch - unmanaged repositories rpm
       ansible.builtin.package:
         name: "{{ elasticsearch_package }}"
       when:
-        - ansible_os_family == "Debian" or
-          not elasticstack_full_stack | bool
+        - not elasticstack_full_stack | bool
 
     - name: Include rolling start
       ansible.builtin.include_tasks: elasticsearch-rolling-start.yml

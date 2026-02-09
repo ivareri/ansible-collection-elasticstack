@@ -247,16 +247,26 @@
   changed_when: false
   when: ansible_virtualization_type == "container" or ansible_virtualization_type == "docker"
 
-- name: Import Tasks elasticsearch-security.yml
-  ansible.builtin.import_tasks: elasticsearch-security.yml
-  when:
+- name: Import Tasks elasticsearch-keystore.yml
+  ansible.builtin.import_tasks: elasticsearch-keystore.yml
+  when: elasticsearch_security | bool
+
+- name: Import Tasks elasticsearch-certificate-authority.yml
+  ansible.builtin.import_tasks: elasticsearch-certificate-authority.yml
+  when: 
     - elasticsearch_security | bool
-    - elasticstack_variant == "elastic"
+    - elasticsearch_manage_ca | bool
   tags:
     - certificates
     - renew_ca
     - renew_es_cert
 
+- name: Import Tasks elasticsearch-security.yml
+  ansible.builtin.import_tasks: elasticsearch-security.yml
+  when:
+    - elasticsearch_security | bool
+    - elasticstack_variant == "elastic"
+    
 - name: Start Elasticsearch
   ansible.builtin.service:
     name: elasticsearch

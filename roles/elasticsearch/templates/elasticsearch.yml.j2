@@ -73,11 +73,19 @@ xpack.security.enrollment.enabled: {{ elasticsearch_security_enrollment }}
 xpack.security.transport.ssl.enabled: true
 xpack.security.transport.ssl.verification_mode: {{ elasticsearch_ssl_verification_mode }}
 xpack.security.transport.ssl.keystore.path: certs/{{ ansible_hostname }}.p12
+{% if elasticsearch_use_truststore | default(true) | bool %}
 xpack.security.transport.ssl.truststore.path: certs/{{ ansible_hostname }}.p12
+{% else %}
+xpack.security.transport.ssl.certificate_authorities: ["certs/ca.crt"]
+{% endif %}
 {% if elasticsearch_http_security | bool %}
 xpack.security.http.ssl.enabled: true
 xpack.security.http.ssl.keystore.path: certs/{{ ansible_hostname }}.p12
+{% if elasticsearch_use_truststore | default(true) | bool %}
 xpack.security.http.ssl.truststore.path: certs/{{ ansible_hostname }}.p12
+{% else %}
+xpack.security.http.ssl.certificate_authorities: ["certs/ca.crt"]
+{% endif %}
 {% endif %}
 {% endif %}
 {% if not elasticsearch_security | bool %}

@@ -43,6 +43,10 @@ elasticsearch_ssl_verification_mode: full
 # If you have an existing CA and certificates, set this to false and provide the necessary certificates in the expected location.
 elasticsearch_manage_ca: true
 
+# Use truststore for SSL trust validation (PKCS#12). If false, uses certificate_authorities (PEM) instead.
+# Both methods use PKCS#12 keystore for the node certificate/key.
+elasticsearch_use_truststore: true
+
 # Upgrade options
 elasticsearch_upgrade_routing_mode: "none"
 elasticsearch_upgrade_stop_ml: false
